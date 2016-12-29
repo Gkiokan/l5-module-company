@@ -1,12 +1,12 @@
 @extends('company::layouts.master')
 
 @section('content')
-    <h1>Edit Company <small></small></h1>
+    <h1>Show Company Information<small></small></h1>
     <div class='space_50'></div>
 
 
 
-    <form action="{{ route('company.update') }}/{{ $company->id}}" method="POST" class='form-horizontal'>
+    <div class='form-horizontal'>
 
         {{-- First row --}}
         <div class='row'>
@@ -130,13 +130,6 @@
         {{-- END 2nd row --}}
         <div class='space_50'></div>
 
-        {{-- btn area --}}
-        <div class='row'>
-            <div class='col-xs-12'>
-                <button type='submit' class='btn btn-info'> Update Company </button>
-            </div>
-        </div>
-        {{ csrf_field() }}
-        {{ method_field('PATCH') }}
-    </form>
+
+    </div>
 @stop

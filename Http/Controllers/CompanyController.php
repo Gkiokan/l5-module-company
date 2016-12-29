@@ -5,68 +5,109 @@ namespace Gkiokan\Company\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use \Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;
+
+use Auth;
+use Gkiokan\Company\Company;
+use Gkiokan\Company\Http\Requests\CompanyRequest;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
+
     public function index()
     {
-        return view('company::index');
+        $companies = Company::where('user_id', Auth::user()->id)->get();
+
+        return view('company::index', compact(['companies']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
+
     public function create()
     {
         return view('company::new');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function store(Request $request)
+
+    public function store(CompanyRequest $request)
     {
-        // ???
+        $user = Auth::user();
+
+        $company = new Company($request->all());
+        $company->user_id = $user->id;
+        $company->save();
 
         return redirect()->route('company.index')
-                         ->with('message.content', 'Should be done?')
-                         ->with('message.type', 'info');
+                         ->with('message.content', 'Your Company has been created')
+                         ->with('message.type', 'success');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @return Response
-     */
-    public function edit($id=null)
-    {
-        if(!$id)
-          $id=\Auth::user()->username;
 
-        return view('company::edit', compact(['id']));
+    public function edit(Company $company)
+    {
+        $user = Auth::user();
+
+        if($user->id !== $company->owner()->first()->id):
+          session()->flash('message.content', 'This company is NOT yours');
+          session()->flash('message.type', 'warning');
+        endif;
+
+        return view('company::edit', compact(['company']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function update(Request $request)
+
+    public function show(Company $company)
     {
+        if(!$company) dd('FU');
+
+        return view('company::show', compact(['company']));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @return Response
-     */
-    public function destroy()
+
+    public function update(CompanyRequest $request, Company $id=null)
     {
+        $company = $id;
+        $id = $company->id;
+        $user = Auth::user();
+
+        if($user->id == $company->owner()->first()->id):
+            $company->update($request->all());
+            session()->flash('message.content', 'Company Information has been updated');
+            session()->flash('message.type', 'success');
+            return redirect()->route('company.edit', ['id' => $id]);
+        endif;
+
+        return back();
+    }
+
+
+    public function delete(Company $id)
+    {
+        $company = $id;
+        $id = $company->id;
+        $user = Auth::user();
+
+        if($user->id == $company->owner()->first()->id):
+            session()->flash('message.content', 'Attention! Delete Operation!');
+            session()->flash('message.type', 'danger');
+            return view('company::delete', ['company' => $company]);
+        endif;
+
+        return redirect()->route('company.index');
+    }
+
+
+    public function destroy(Company $id){
+        $company = $id;
+        $id   = $company->id;
+        $name = $company->name;
+        $user = Auth::user();
+
+        if($user->id == $company->owner()->first()->id):
+            $company->delete();
+            session()->flash('message.content', "You have successfully deleted your Company $name");
+            session()->flash('message.type', 'success');
+        endif;
+
+        return redirect()->route('company.index');
     }
 }

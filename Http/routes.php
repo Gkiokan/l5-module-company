@@ -7,12 +7,12 @@ Route::group(['middleware' => 'web', 'prefix' => 'company', 'namespace' => 'Gkio
       'as'    => 'company.index'
     ]);
 
-    // Route::get('/edit', [
-    //   'uses'  => 'CompanyController@edit',
-    //   'as'    => 'company.edit'
-    // ]);
+    Route::get('show/{company?}', [
+      'uses'  => 'CompanyController@show',
+      'as'    => 'company.show'
+    ]);
 
-    Route::get('edit/{id?}', [
+    Route::get('edit/{company?}', [
       'uses'  => 'CompanyController@edit',
       'as'    => 'company.edit'
     ]);
@@ -25,6 +25,22 @@ Route::group(['middleware' => 'web', 'prefix' => 'company', 'namespace' => 'Gkio
     Route::post('saveit', [
       'uses'  => 'CompanyController@store',
       'as'    => 'company.store'
+    ]);
+
+    Route::patch('update/{id?}', [
+      'uses'  => 'CompanyController@update',
+      'as'    => 'company.update'
+    ]);
+
+
+    Route::get('delete/{id?}', [
+      'uses'  => 'CompanyController@delete',
+      'as'    => 'company.delete'
+    ]);
+
+    Route::delete('delete/{id?}/save', [
+      'uses'  => 'CompanyController@destroy',
+      'as'    => 'company.delete.final'
     ]);
 
 
