@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'company', 'namespace' => 'Gkiokan\Company\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'company', 'namespace' => 'Gkiokan\Company\Http\Controllers'], function()
 {
     Route::get('/', [
       'uses'  => 'CompanyController@index',

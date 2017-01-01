@@ -19,5 +19,8 @@ class Company extends Model
         return $this->belongsTo('App\User', 'user_id', 'id');
     }
 
+    public static function byUserID($id=null){
+        return self::where('user_id', $id);
+    }
 
 }

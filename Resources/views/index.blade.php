@@ -27,10 +27,10 @@
           <td> {{ $company->name }} <small>({{ $company->id }})</small></td>
           <td>
               <div class='pull-right'>
-                <a href="{{ route('company.delete', ['id' => $company->id]) }}" class='btn btn-danger btn-xs'> <span class='glyphicon glyphicon-pencil'></span> </a>
+                <a href="{{ route('company.delete', ['id' => $company->id]) }}" class='btn btn-danger btn-xs'> <span class='glyphicon glyphicon-trash'></span> </a>
               </div>
               <div class='pull-right' style='padding-right:10px;'>
-                  <a href="{{ route('company.edit', ['id' => $company->id]) }}" class='btn btn-info btn-xs'> <span class='glyphicon glyphicon-trash'></span> </a>
+                  <a href="{{ route('company.edit', ['id' => $company->id]) }}" class='btn btn-info btn-xs'> <span class='glyphicon glyphicon-pencil'></span> </a>
               </div>
           </td>
       </tr>
